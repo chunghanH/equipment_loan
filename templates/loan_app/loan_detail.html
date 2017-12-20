@@ -1,0 +1,23 @@
+{% extends "loan_app/base.html" %}
+{% block body_block%}
+<ul class="list-group">
+	<li class="list-group-item">借用人：{{ loan.user }}</li>
+	<li class="list-group-item">物品群組：{{ loan.group_name.group_name }}</li>
+	<li class="list-group-item">內容：{{ loan.notation }}</li>
+	<li class="list-group-item">借出日：{{ loan.loan_date }}</li>
+	<li class="list-group-item">歸還日：{{ loan.return_date }}</li>
+	<li class="list-group-item">
+	狀態：
+	{% if loan.return_code %}
+		<b style="color: #DC143C;">未歸還</b>
+		{% if user.pk == loan.user.pk %}
+			<a href="{% url 'loan_app:return_action' loan.pk %}" class="btn btn-warning">歸還</a>
+		{% endif %}
+	{% else %}
+		已歸還
+	{% endif %}
+	</li>
+	<li class="list-group-item"><a href="{% url 'loan_app:list' %}" class="btn btn-primary">返回</a>
+</li>
+</ul>
+{% endblock %}

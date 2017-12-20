@@ -1,0 +1,58 @@
+{% extends "loan_app/base.html" %}
+{% block body_block%}
+<a href="{% url 'loan_app:create' %}" class="btn btn-primary">我要借用</a>
+<table class="table">
+	<thead>
+		<tr>
+			<td>借用人</td>
+			<td>物品</td>
+			<td>借出日</td>
+			<td>歸還日</td>
+			<td>狀態</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</thead>
+
+	<tbody>
+	{% for loan in loans %}
+	<tr>
+		<td>{{ loan.user }}</td>
+		<td>{{ loan.group_name.group_name }}</td>
+		<td>{{ loan.loan_date }}</td>
+		{% if loan.return_code %}
+			<td>無</td>
+			<td><b style="color: #DC143C;">未歸還</b></td> 
+			{% if user.pk == loan.user.pk %}
+				<td><a href="{% url 'loan_app:return_action' loan.pk %}" class="btn btn-warning">歸還</a></td>
+			{% else %}
+				<td></td>
+			{% endif %}
+		{% else %}
+			<td>{{ loan.return_date }}</td>
+			<td><a>已歸還</a></td>
+			<td></td>
+		{% endif %}
+		<td><a href="{% url 'loan_app:detail' loan.pk %}" class="btn btn-info">詳情</a></td>
+		
+	</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if loans.has_previous %}
+            <a href="?page={{ loans.previous_page_number }}">上一頁</a>
+        {% endif %}
+
+        <span class="current">
+            {{ loans.number }}  之  {{ loans.paginator.num_pages }}
+        </span>
+
+        {% if loans.has_next %}
+            <a href="?page={{ loans.next_page_number }}">下一頁</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
